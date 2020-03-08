@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <title>Chat Service</title>
 </head>
 <body>
-<h1>Welcome!</h1>
-
-<p>To login your account click <a th:href="@{/login}">here</a> .</p>
-<p>For Registraion click <a th:href="@{/registration}">here</a> please.</p>
+<div class="container">
+    <h1>Welcome!</h1>
+    <h3>To begin chat please register or if you already have an account then login.</h3>
+    <br>
+    <p>To login your account click
+        <a th:href="@{/login}"><button class="btn"> Here.</button></a>
+    </p>
+    <br>
+    <p>For Registration click
+        <a th:href="@{/registration}"><button class="btn"> Here</button></a>
+        please.
+    </p>
+    <br>
+</div>
 </body>
 </html>

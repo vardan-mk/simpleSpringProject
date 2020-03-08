@@ -5,11 +5,13 @@ import com.vardanmk.ChatServiceApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,15 +34,13 @@ public class LoginAndRegistrationController {
         return "index";
     }
     @GetMapping("/home")
-    public String home() {
+    public String home(@AuthenticationPrincipal User user, Model model) {
+
+        if (user.getRole().name().equals("ADMIN")){
+            return "redirect:/admin";
+        }
+        model.addAttribute("user", user);
         return "home";
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/admin")
-    public String userEditForm() {
-
-        return "admin";
     }
 
     @GetMapping("/registration")
@@ -56,7 +56,7 @@ public class LoginAndRegistrationController {
             @RequestParam("file") MultipartFile file) {
 
         try {
-            saveFile(user, file);
+            ControllerUtils.saveFile(user, file, uploadPath);
         } catch (IOException e) {
             user.setFilename("");
         }
@@ -67,21 +67,10 @@ public class LoginAndRegistrationController {
         return "redirect:/login";
     }
 
-    private void saveFile(@Valid User user, @RequestParam("file") MultipartFile file) throws IOException {
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
-            File uploadDir = new File(uploadPath);
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFilename = uuidFile + "_" + file.getOriginalFilename();
-
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-
-            user.setFilename(resultFilename);
-        }
+    @RequestMapping("/login-error.html")
+    public String loginError(Model model) {
+        model.addAttribute("loginError", true);
+        return "login";
     }
 
 }

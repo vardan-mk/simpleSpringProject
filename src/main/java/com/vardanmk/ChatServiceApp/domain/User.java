@@ -53,6 +53,10 @@ public class User implements UserDetails {
         this.filename = filename;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setLastname(String userName) {
         this.lastname = userName;
     }
@@ -79,6 +83,10 @@ public class User implements UserDetails {
 
     public Role getRole() {
         return role;
+    }
+
+    public Long getId() {
+        return id;
     }
 
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+
+<form th:action="@{/edituser/{id}(id=${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
+    <div><label> First Name : <input type="text" name="firstname"/> </label></div>
+<!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{firstname}"></span>-->
+    <div><label> Last Name : <input type="text" name="lastname"/> </label></div>
+    <!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{lastname}"></span>-->
+    <div><label> Last Name : <input type="text" name="username"/> </label></div>
+    <!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{lastname}"></span>-->
+    <div><label> Last Name : <input type="text" name="password"/> </label></div>
+<!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{lastname}"></span>-->
+    <div><label> Profile Picture: <input type="file" name="file" id="customFile" /></label></div>
+    <div><input type="submit" value="Update User"/></div>
+</form>
+
+</body>
+</html>

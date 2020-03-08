@@ -1,17 +1,58 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <head>
-    <title>Hello World!</title>
+    <title>Admin Portal</title>
 </head>
 <body>
 <div th:if="${param.error}">
     Invalid admin.
 </div>
-<h1>admin
-</h1>
+<h1>Select operation with users</h1>
+
+<div class="container">
+<table>
+    <thead>
+    <tr>
+        <th> Firstname </th>
+        <th> Lastname </th>
+        <th> User Picture </th>
+    </tr>
+    <tbody>
+    <tr th:if="${users.isEmpty()}">
+        <td colspan="2"> No Users Available </td>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td><span th:text="${user.firstname}"> User Firstname </span></td>
+        <td><span th:text="${user.lastname}"> User Lastname </span></td>
+        <td><img th:src="@{user.filename}" /> User Picture </td>
+        <td><a th:href="@{/edituser/{id}(id=${user.id})}"><button class="btn">Edit User</button></a></td>
+        <td><a th:href="@{/userdelete/{id}(id=${user.id})}"><button class="btn">Delete User</button></a></td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<h2>Also you can add a new user</h2>
+<div class="container">
+<form th:action="@{/adduser}" method="post" enctype="multipart/form-data" class="col-sm-6">
+    <div><label> First Name : <input type="text" name="firstname" class="col-sm-12"/> </label></div>
+<!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{firstname}"></span>-->
+    <div><label> Last Name : <input type="text" name="lastname" class="col-sm-12"/> </label></div>
+<!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{lastname}"></span>-->
+    <div><label> User Name : <input type="text" name="username" class="col-sm-12"/> </label></div>
+<!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{username}"></span>-->
+    <div><label> Password: <input type="password" name="password" class="col-sm-12"/> </label></div>
+<!--    <span th:if="${#fields.hasErrors('name')}" th:errors="*{password}"></span>-->
+    <div><label> Profile Picture: <input type="file" name="file" class="btn"/></label></div>
+    <br>
+    <div><input type="submit" class="btn btn-primary col-sm-6" value="Add New User"/></div>
+    <br>
+</form>
+</div>
+<br>
 <form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
+    <input type="submit" class="btn" value="Sign Out"/>
 </form>
 </body>
 </html>

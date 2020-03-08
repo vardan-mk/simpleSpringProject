@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example </title>
+    <title>Registration Page </title>
+    <!-- Bootstrap core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 </head>
 <body>
 <div th:if="${usernameError}">
@@ -11,13 +13,28 @@
 <div th:if="${param.logout}">
     You have been logged out.
 </div>
-<form th:action="@{/registration}" method="post" enctype="multipart/form-data">
-    <div><label> First Name : <input type="text" name="firstname"/> </label></div>
-    <div><label> Last Name : <input type="text" name="lastname"/> </label></div>
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><label> Profile Picture: <input type="file" name="file" id="customFile" /></label></div>
-    <div><input type="submit" value="Register"/></div>
+
+
+<div class="container">
+<form th:action="@{/registration}" method="post" enctype="multipart/form-data" class="col-sm-6">
+    <div><label> First Name : <input type="text" name="firstname" class="col-sm-12"/> </label></div>
+    <br>
+    <div><label> Last Name : <input type="text" name="lastname" class="col-sm-12"/> </label></div>
+    <br>
+    <div><label> User Name : <input type="text" name="username" class="col-sm-12"/> </label></div>
+    <br>
+    <div><label> Password: <input type="password" name="password" class="col-sm-12"/> </label></div>
+    <br>
+    <div><label> Profile Picture: <input type="file" name="file" class="btn" /></label></div>
+    <br>
+    <div><input type="submit" class="col-sm-6 btn btn-primary btn-block" value="Register"/></div>
 </form>
+</div>
+<div>
+    <p>To login your account click
+        <a th:href="@{/login}"><button class="btn"> Here.</button></a>
+    </p>
+</div>
+
 </body>
 </html>

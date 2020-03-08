@@ -21,7 +21,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable(); //disabled for avoid conflict with h2 DB web console
@@ -33,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/home")
+                    .defaultSuccessUrl("/home", false)
                     .permitAll()
                 .and()
                     .logout()

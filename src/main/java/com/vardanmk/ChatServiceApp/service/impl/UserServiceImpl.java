@@ -64,6 +64,17 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    public boolean updateUser(User user) {
+        user.setFirstname(user.getFirstname());
+        user.setLastname(user.getLastname());
+        user.setLastname(user.getUsername());
+        user.setLastname(user.getPassword());
+        user.setFilename(user.getFilename());
+        user.setRole(Role.USER);
+        userRepo.save(user);
+        return true;
+    }
+
     @Override
     public User getUser(Long id) {
 //        log.info("Get user by id -> {}", id);
