@@ -5,10 +5,17 @@ import com.vardanmk.ChatServiceApp.enums.Role;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface UserService extends UserDetailsService {
     boolean addUser(User user);
-    User createUser(String username, String firstname, String lastname, String password);
+    User createUser(String username, String firstname, String lastname, String password, Role role);
 
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    User getUser(Long id);
+    List<User> getAllUsers();
+//    User updateUser(User user);
+
+    void deleteUser(Long id);
+
 }

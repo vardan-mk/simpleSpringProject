@@ -25,24 +25,17 @@ public class BootStrap implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
-        // ==============  Creat User Manager ====================
-       User user = userService.createUser(env.getProperty("user.admin.username"),
+// ==============  Creat Admin User  ====================
+       User adminUser = userService.createUser(
+                env.getProperty("user.admin.username"),
                 env.getProperty("user.admin.firstName"),
                 env.getProperty("user.admin.lastName"),
-                env.getProperty("user.admin.password")
+                env.getProperty("user.admin.password"),
+                Role.ADMIN
                 );
-
-
-        // ==============  Creat simple order ====================
-
-
-
     }
-
-
-
 }
 
 

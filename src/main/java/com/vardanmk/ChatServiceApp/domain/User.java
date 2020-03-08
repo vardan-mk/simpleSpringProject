@@ -5,7 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -15,25 +17,30 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Firstname cannot be empty")
     @Column(name = "first_name", nullable = false)
     private String firstname;
 
+    @NotBlank(message = "Lastname cannot be empty")
     @Column(name = "last_name", nullable = false)
     private String lastname;
 
+    @NotBlank(message = "Username cannot be empty")
     @Column(name = "user_name", nullable = false)
     private String username;
 
+    @NotBlank(message = "Password cannot be empty")
     @Column(name = "user_passwd", nullable = false)
     private String password;
 
     @Column(name = "user_pic")
     private String filename;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+//    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
+    private Role role;
 
     public User() {
     }
@@ -62,22 +69,23 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return Collections.singleton(getRole());
+//        return getRoles();
     }
 
 

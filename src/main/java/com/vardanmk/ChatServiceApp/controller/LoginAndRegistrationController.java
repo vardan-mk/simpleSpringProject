@@ -3,17 +3,29 @@ package com.vardanmk.ChatServiceApp.controller;
 import com.vardanmk.ChatServiceApp.domain.User;
 import com.vardanmk.ChatServiceApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 public class LoginAndRegistrationController {
 
     @Autowired
     UserService userService;
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @GetMapping("/")
     public String index() {
@@ -38,37 +50,38 @@ public class LoginAndRegistrationController {
 
     @PostMapping("/registration")
     public String addUser(
-
             User user,
 //            BindingResult bindingResult,
-            Model model
-    ) {
+            Model model,
+            @RequestParam("file") MultipartFile file) {
 
-
-//        boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirm);
-//
-//        if (isConfirmEmpty) {
-//            model.addAttribute("password2Error", "Password confirmation cannot be empty");
-//        }
-//
-//        if (user.getPassword() != null && !user.getPassword().equals(passwordConfirm)) {
-//            model.addAttribute("passwordError", "Passwords are different!");
-//        }
-//
-//        if (isConfirmEmpty || bindingResult.hasErrors() || !response.isSuccess()) {
-//            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
-//
-//            model.mergeAttributes(errors);
-//
-//            return "registration";
-//        }
-//
+        try {
+            saveFile(user, file);
+        } catch (IOException e) {
+            user.setFilename("");
+        }
         if (!userService.addUser(user)) {
             model.addAttribute("usernameError", "User exists!");
             return "registration";
         }
+        return "redirect:/login";
+    }
 
-        return "redirect:/home";
+    private void saveFile(@Valid User user, @RequestParam("file") MultipartFile file) throws IOException {
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
+            File uploadDir = new File(uploadPath);
+
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFilename = uuidFile + "_" + file.getOriginalFilename();
+
+            file.transferTo(new File(uploadPath + "/" + resultFilename));
+
+            user.setFilename(resultFilename);
+        }
     }
 
 }
