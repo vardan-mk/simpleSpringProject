@@ -1,16 +1,13 @@
 package com.vardanmk.ChatServiceApp.controller;
 
 import com.vardanmk.ChatServiceApp.domain.User;
-import com.vardanmk.ChatServiceApp.enums.Role;
 import com.vardanmk.ChatServiceApp.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +21,7 @@ import java.io.IOException;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminUserController {
 
+    private final Logger log = LoggerFactory.getLogger(AdminUserController.class);
     @Autowired
     UserService userService;
 
@@ -56,6 +54,7 @@ public class AdminUserController {
             model.addAttribute("usernameError", "User exists!");
             return "admin?error=notCreate";
         }
+        log.info(" Editing user with username -> {}",  user.getUsername());
         return "redirect:/admin";
     }
 
@@ -63,7 +62,7 @@ public class AdminUserController {
     public String userEditForm(@PathVariable("id") Long id, Model model) {
         User user = userService.getUser(id);
         model.addAttribute("user", user);
-
+        log.info(" Editing user with id -> {}",  id);
         return "edituser";
     }
 
@@ -88,13 +87,14 @@ public class AdminUserController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
+        log.info(" updating user with id -> {}",  id);
         return "redirect:/admin";
     }
 
     @GetMapping("/userdelete/{id}")
     public String userRemove(@NonNull @PathVariable Long id) {
         userService.deleteUser(id);
-//        log.info("Manager deleted User by Id, Manager -> {}, deleted user id -> {}", username, id);
+        log.info(" deleted user with id -> {}",  id);
         return "redirect:/admin";
     }
 }

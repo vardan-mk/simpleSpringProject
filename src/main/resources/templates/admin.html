@@ -26,7 +26,7 @@
     <tr th:each="user : ${users}">
         <td><span th:text="${user.firstname}"> User Firstname </span></td>
         <td><span th:text="${user.lastname}"> User Lastname </span></td>
-        <td><img th:src="@{user.filename}" /> User Picture </td>
+        <td><img th:src="@{${'/static/' + user.filename}}" /> User Picture </td>
         <td><a th:href="@{/edituser/{id}(id=${user.id})}"><button class="btn">Edit User</button></a></td>
         <td><a th:href="@{/userdelete/{id}(id=${user.id})}"><button class="btn">Delete User</button></a></td>
     </tr>

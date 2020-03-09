@@ -5,18 +5,21 @@ import com.vardanmk.ChatServiceApp.enums.Role;
 import com.vardanmk.ChatServiceApp.repos.UserRepo;
 import com.vardanmk.ChatServiceApp.service.UserService;
 import com.vardanmk.ChatServiceApp.util.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.expression.Lists;
 
 import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
         user.setLastname(lastname);
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(12)));
         user.setRole(role);
-//        log.info("user created by eMail -> {}", username);
+        log.info(" this method used only in BootStrap class to create an admin with username  -> {}", username);
         return userRepo.save(user);
     }
 
@@ -60,7 +63,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(Role.USER);
 
         userRepo.save(user);
-
+        log.info("user created with username  -> {}", user.getUsername());
         return true;
     }
 
@@ -72,12 +75,13 @@ public class UserServiceImpl implements UserService {
         user.setFilename(user.getFilename());
         user.setRole(Role.USER);
         userRepo.save(user);
+        log.info("user was updated");
         return true;
     }
 
     @Override
     public User getUser(Long id) {
-//        log.info("Get user by id -> {}", id);
+        log.info("Get user by id -> {}", id);
         return userRepo.findById(id).orElseThrow(() -> new NotFoundException("User Not found by Id"));
     }
 
@@ -88,26 +92,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-//        log.info("Try to remove user by id -> {}", id);
+        log.info("Try to remove user by id -> {}", id);
         User user = userRepo.findById(id).orElseThrow(() -> new NotFoundException("User Not found User by Id for remove"));
         userRepo.delete(user);
     }
-//
-//    public void saveUser(User user, String username, Map<String, String> form) {
-//        user.setUsername(username);
-//
-//        Set<String> roles = Arrays.stream(Role.values())
-//                .map(Role::name)
-//                .collect(Collectors.toSet());
-//
-//        user.getRoles().clear();
-//
-//        for (String key : form.keySet()) {
-//            if (roles.contains(key)) {
-//                user.getRoles().add(Role.valueOf(key));
-//            }
-//        }
-//
-//        userRepo.save(user);
-//    }
+
 }

@@ -9,11 +9,15 @@ import java.util.List;
 
 @Service
 public interface UserService extends UserDetailsService {
+
     boolean addUser(User user);
+
     User createUser(String username, String firstname, String lastname, String password, Role role);
 
     User getUser(Long id);
+
     List<User> getAllUsers();
+
     boolean updateUser(User user);
 
     void deleteUser(Long id);

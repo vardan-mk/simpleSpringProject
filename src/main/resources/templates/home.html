@@ -9,11 +9,10 @@
 <div>
 <!--<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>-->
     <h1>Hello <span th:text="${user.username}">NOT FOUND</span></h1>
-    <img th:src="@{${'pics/' + user.filename}}" />
-
+    <img th:src="@{${'/static/' + user.filename}}" />
     <br>
     <h3>welcome to your account, you can now start to chat </h3>
-    <a th:src="@{/chatservice}"><button class="btn"> Begin Chat</button></a>
+    <a th:href="@{/chatservice/(user=${user.username})}"><button class="btn"> Begin Chat</button></a>
     <br><br>
     <div>
     <form th:action="@{/logout}" method="post">
