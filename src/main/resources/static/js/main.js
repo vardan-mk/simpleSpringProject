@@ -1,4 +1,3 @@
-
 var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
 
@@ -9,9 +8,13 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
+var roomIdDisplay = document.querySelector('#room-id-display');
 
 var stompClient = null;
 var username = null;
+var roomId = null;
+var topic = null;
+var currentSubscription;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -20,7 +23,6 @@ var colors = [
 
 function connect(event) {
     username = urlParams.get("user");
-
     if(username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
@@ -35,14 +37,17 @@ function connect(event) {
 
 
 function onConnected() {
+    roomId = urlParams.get("room");
+    roomIdDisplay.textContent = roomId;
+    topic = `/app/chat/${roomId}`;
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    currentSubscription = stompClient.subscribe(`/topic/${roomId}`, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat_register",
+    stompClient.send(`${topic}/chat_register`,
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
-    )
+    );
 
     connectingElement.classList.add('hidden');
 }
@@ -64,7 +69,7 @@ function send(event) {
             type: 'CHAT'
         };
 
-        stompClient.send("/app/chat_send", {}, JSON.stringify(chatMessage));
+        stompClient.send(`${topic}/chat_send`, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -108,6 +113,13 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+function leaveChat() {
+    if (currentSubscription) {
+    currentSubscription.unsubscribe();
+    }
+    stompClient.send(`${topic}/leave`, {}, JSON.stringify({sender: username, type: 'LEAVE'}));
+    location.replace("/home");
+}
 
 function getAvatarColor(messageSender) {
     var hash = 0;

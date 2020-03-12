@@ -27,7 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable(); //disabled for avoid conflict with h2 DB web console
         http
                 .authorizeRequests()
-                    .antMatchers( "/", "/h2/*", "/registration", "/static/**").permitAll()
+                    .antMatchers( "/", "/registration", "login").anonymous()
+                    .antMatchers( "/admin").hasRole("ADMIN")
+                    .antMatchers("/static/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

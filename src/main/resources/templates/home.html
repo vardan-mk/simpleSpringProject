@@ -9,10 +9,15 @@
 <div>
 <!--<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>-->
     <h1>Hello <span th:text="${user.username}">NOT FOUND</span></h1>
-    <img th:src="@{${'/static/' + user.filename}}" />
+    <img th:src="@{'/static/pics/' + ${user.filename}}" />
     <br>
     <h3>welcome to your account, you can now start to chat </h3>
-    <a th:href="@{/chatservice/(user=${user.username})}"><button class="btn"> Begin Chat</button></a>
+    <div class="container">
+        <a th:href="@{/chatservice/(user=${user.username},room='room1')}"><button class="btn">Room 1</button></a>
+        <a th:href="@{/chatservice/(user=${user.username},room='room2')}"><button class="btn">Room 2</button></a>
+        <a th:href="@{/chatservice/(user=${user.username},room='room3')}"><button class="btn">Room 3</button></a>
+        <a th:href="@{/chatservice/(user=${user.username},room='room4')}"><button class="btn">Room 4</button></a>
+    </div>
     <br><br>
     <div>
     <form th:action="@{/logout}" method="post">
